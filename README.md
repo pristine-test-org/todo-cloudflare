@@ -22,17 +22,19 @@ The app uses the team's existing Supabase project:
   **Project Settings → API** (on newer dashboards **API Keys → Legacy API keys → anon public**).
   It is safe to ship to the browser; row level security decides what it can do.
 
-Before the app can load data:
+The `todos` table already exists on that project, so there is nothing to apply. If the project
+shows as paused (the free tier pauses idle projects), open it in the Supabase dashboard and press
+**Restore project**.
 
-1. **Restore the project.** It is paused on the free tier. In the Supabase dashboard open the
-   project and press **Restore project**; it takes a few minutes.
-2. **Create the table.** Either open **SQL Editor**, paste
-   `supabase/migrations/20261007120000_todos.sql` and run it, or from this folder run:
-   ```bash
-   npx supabase login
-   npx supabase link --project-ref hszqtfynyogshhltamep
-   npx supabase db push
-   ```
+For a fresh Supabase project, create the table from
+`supabase/migrations/20261007120000_todos.sql`: paste it into **SQL Editor** and run it, or from
+this folder run:
+
+```bash
+npx supabase login
+npx supabase link --project-ref <your-project-ref>
+npx supabase db push
+```
 
 The migration turns on row level security with policies that let the `anon` role select,
 insert, update and delete every row. That is deliberate for a shared demo list; tighten it before
@@ -69,7 +71,7 @@ and redeploy after changing them. Without them the app still loads and says what
 Cloudflare builds the app from GitHub on every push, and every pull request gets its own preview
 URL.
 
-1. Restore the Supabase project and create the table (see **Supabase** above).
+1. Copy the anon key (see **Supabase** above). The table is already there.
 2. In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to Git**, authorize
    GitHub if asked, and pick this repository.
 3. Build settings:
