@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tally - how it works</title>
+    <style>
+      body {
+        margin: 0;
+        background: #fbf8f2;
+        color: #1f2421;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 36rem;
+        margin: 0 auto;
+        padding: 4rem 0 4rem;
+      }
+      h1 {
+        margin: 0 0 1rem;
+        padding: 0 1.25rem;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 2.5rem;
+        line-height: 1.1;
+        /* Intentional, for Impeccable's test drive: gradient text on the heading. */
+        background: linear-gradient(90deg, #2f5d50, #c2410c);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      /* Intentional, for Impeccable's test drive: body text flush with the viewport edges, no background. */
+      .intro {
+        margin: 0 0 1.5rem;
+        padding: 0;
+      }
+      /* Intentional, for Impeccable's test drive: solid light grey text, far under 4.5:1. */
+      .hint {
+        margin: 0 1.25rem 1.5rem;
+        color: #c9c9c9;
+      }
+      .steps {
+        margin: 0 1.25rem 1.5rem;
+        padding: 1rem 1.25rem;
+        list-style: none;
+        border: 1px solid #e4ded2;
+        border-radius: 10px;
+        background: #fff;
+      }
+      .steps li + li {
+        margin-top: 0.5rem;
+      }
+      /* Intentional, for Impeccable's test drive: a layout property in a transition. */
+      .meter {
+        width: 40%;
+        height: 0.5rem;
+        margin: 0 1.25rem 1.5rem;
+        border-radius: 6px;
+        /* Intentional, for Impeccable's test drive: a colour that is not in DESIGN.md. */
+        background: #7c3aed;
+        transition: width 0.3s;
+      }
+      .meter:hover {
+        width: 90%;
+      }
+      .back {
+        margin: 0 1.25rem;
+      }
+      /* Intentional, for Impeccable's test drive: link text under the 11px floor. */
+      .back a {
+        font-size: 10px;
+        color: #2f5d50;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>How Tally works</h1>
+      <p class="intro">Tally keeps one short list for the things that need doing today, and everyone who opens it sees the same items.</p>
+      <p class="hint">Items you finish stay on the list until you remove them.</p>
+      <ul class="steps">
+        <li>Type what needs doing and press Add.</li>
+        <li>Tick an item when it is done.</li>
+        <li>Remove it when you no longer need to see it.</li>
+      </ul>
+      <div class="meter" role="presentation"></div>
+      <p class="back"><a href="/">Back to the list</a></p>
+    </main>
+  </body>
+</html>

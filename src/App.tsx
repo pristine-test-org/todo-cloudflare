@@ -149,6 +149,10 @@ export default function App() {
           ))}
         </ul>
       )}
+
+      <p className="count" style={{ marginTop: "1.5rem" }}>
+        <a href="/impeccable-test-drive.html">How Tally works</a>
+      </p>
     </main>
   );
 }
