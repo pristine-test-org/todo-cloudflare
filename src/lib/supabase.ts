@@ -10,7 +10,7 @@ export type Todo = {
 // The project this list lives in. Both values are public by design (they ship in every browser bundle);
 // the row-level security policies decide what the anon key may do. A host's VITE_* variables win when set.
 const DEFAULT_URL = "https://hszqtfynyogshhltamep.supabase.co";
-const DEFAULT_PUBLISHABLE_KEY = "PASTE_PUBLISHABLE_KEY_HERE"; // sb_publishable_…, the key Supabase now issues in place of the anon key
+const DEFAULT_PUBLISHABLE_KEY = "sb_publishable_aCtosSr17ISoXGsoTazAbA_MiMNv78_"; // sb_publishable_…, the key Supabase now issues in place of the anon key
 
 const url = import.meta.env.VITE_SUPABASE_URL || DEFAULT_URL;
 const anonKey =
