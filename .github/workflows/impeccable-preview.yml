@@ -1,0 +1,63 @@
+# .github/workflows/impeccable-preview.yml
+# Builds the site in YOUR CI and uploads the static output to Impeccable, which
+# serves it as the preview the design review renders. No secrets: the job's
+# GitHub OIDC token proves which repo and commit is uploading. When a step
+# fails, the last step tells Impeccable which one, so the setup page can say.
+name: impeccable preview
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        id: setup
+        with: { node-version: 'lts/*', cache: npm }
+      - id: install
+        shell: bash
+        run: |
+          exec > >(tee impeccable-step.log) 2>&1
+          npm ci
+      - id: build
+        shell: bash
+        run: |
+          exec > >(tee impeccable-step.log) 2>&1
+          npm run build
+      - name: Upload to Impeccable
+        id: upload
+        shell: bash
+        env:
+          OUT: dist
+        run: |
+          exec > >(tee impeccable-step.log) 2>&1
+          if [ ! -d "$OUT" ] || [ -z "$(find -L "$OUT" -maxdepth 2 -name index.html -print -quit)" ]; then
+            echo 'Entry page not found in "dist". Set the output directory, or, if it is a server, choose the method that starts it'
+            exit 1
+          fi
+          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=impeccable.reviews" | jq -r .value)
+          tar --exclude=impeccable-step.log -czf "$RUNNER_TEMP/site.tgz" -C "$OUT" .
+          REG=$(curl -sS --fail-with-body -X POST https://impeccable.reviews/api/sites/upload \
+            -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/gzip" \
+            --data-binary @"$RUNNER_TEMP/site.tgz") || { echo "$REG"; exit 1; }
+          echo "$REG"
+          echo "impeccable access check: $(echo "$REG" | jq -r '.access.detail // "not run"')"
+      - name: Tell Impeccable what failed
+        if: failure()
+        run: |
+          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=impeccable.reviews" | jq -r .value)
+          LOG=$({ for f in impeccable-step.log app.log tunnel.log; do [ -s "$f" ] && { echo "== $f"; tail -c 3000 "$f"; }; done; true; } | sed -E 's#://([^:/@[:space:]]+):[^@[:space:]]+@#://\1:***@#g')
+          jq -n --arg log "$LOG" --arg url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            '{"outcomes": {"setup": "${{ steps.setup.outcome }}", "install": "${{ steps.install.outcome }}", "prepare": "${{ steps.prepare.outcome }}", "seed": "${{ steps.seed.outcome }}", "build": "${{ steps.build.outcome }}", "upload": "${{ steps.upload.outcome }}"}, "log": $log, "runUrl": $url}' \
+            | curl -sS -X POST https://impeccable.reviews/api/previews/report \
+              -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" --data-binary @-
+# If your site is built under a subpath (SvelteKit paths.base, Next basePath),
+# tar the PARENT of the output so its assets resolve, and add
+# -H "X-Impeccable-Base-Path: /that-path" to the upload.
