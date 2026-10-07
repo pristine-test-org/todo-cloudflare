@@ -4,7 +4,7 @@ One short list for the things that need doing today. Add an item, tick it off, r
 Tally is a static React app with a Supabase table behind it; there is no sign-in, everyone who
 opens the site sees and edits the same list.
 
-Live site: _not deployed yet_ (add the URL here after the first deploy)
+Live site: https://todo-cloudflare.abdul-3ef.workers.dev/
 
 ## Tech stack
 

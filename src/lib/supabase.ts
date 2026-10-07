@@ -7,8 +7,13 @@ export type Todo = {
   created_at: string;
 };
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// The project this list lives in. Both values are public by design (they ship in every browser bundle);
+// the row-level security policies decide what the anon key may do. A host's VITE_* variables win when set.
+const DEFAULT_URL = "https://hszqtfynyogshhltamep.supabase.co";
+const DEFAULT_ANON_KEY = "PASTE_ANON_KEY_HERE";
+
+const url = import.meta.env.VITE_SUPABASE_URL || DEFAULT_URL;
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || (DEFAULT_ANON_KEY.startsWith("PASTE_") ? "" : DEFAULT_ANON_KEY);
 
 /** Null when the build had no Supabase settings; the app shows a setup message instead of a blank page. */
 export const supabase: SupabaseClient | null = url && anonKey ? createClient(url, anonKey) : null;
