@@ -1,0 +1,2 @@
+# Supabase CLI settings. Only what `supabase link` and `supabase db push` need; the CLI fills in the rest.
+project_id = "tally"

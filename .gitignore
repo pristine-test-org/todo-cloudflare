@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build output
+dist
+*.tsbuildinfo
+
+# env files (.env.example is the committed template)
+.env
+.env.local
+.env.*.local
+
+# host tooling
+.netlify
+.wrangler
+
+# misc
+.DS_Store
+*.log
