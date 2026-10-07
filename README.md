@@ -10,7 +10,7 @@ Live site: https://todo-cloudflare.abdul-3ef.workers.dev/
 
 - **Vite + React 19 + TypeScript**, plain CSS. The build is a static `dist/` folder.
 - **Supabase** for storage: one `todos` table (`id`, `title`, `done`, `created_at`), read and
-  written from the browser with `@supabase/supabase-js` and the public anon key.
+  written from the browser with `@supabase/supabase-js` and the public publishable key.
 - **Cloudflare Pages** hosts `dist/`, built from GitHub, with a preview URL for every pull request.
 
 ## Supabase
@@ -19,7 +19,7 @@ The app uses the team's existing Supabase project:
 
 - Project URL: `https://hszqtfynyogshhltamep.supabase.co` (ref `hszqtfynyogshhltamep`)
 - Anon key: not in this repo. Copy it from the Supabase dashboard → the project →
-  **Project Settings → API** (on newer dashboards **API Keys → Legacy API keys → anon public**).
+  **Project Settings → API** (on newer dashboards **API Keys → Legacy API keys → Publishable key**).
   It is safe to ship to the browser; row level security decides what it can do.
 
 The `todos` table already exists on that project, so there is nothing to apply. If the project
@@ -44,7 +44,7 @@ storing anything private.
 
 ```bash
 npm install
-cp .env.example .env.local   # then paste the anon key
+cp .env.example .env.local   # then paste the publishable key
 npm run dev                  # http://localhost:5173
 ```
 
@@ -61,7 +61,7 @@ npm run dev                  # http://localhost:5173
 | Name | Value |
 | --- | --- |
 | `VITE_SUPABASE_URL` | `https://hszqtfynyogshhltamep.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | the project's anon key (see above) |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | the project's publishable key (see above) |
 
 Vite bakes both into the bundle at build time, so set them on the host **before** the first build
 and redeploy after changing them. Without them the app still loads and says what is missing.
@@ -71,7 +71,7 @@ and redeploy after changing them. Without them the app still loads and says what
 Cloudflare builds the app from GitHub on every push, and every pull request gets its own preview
 URL.
 
-1. Copy the anon key (see **Supabase** above). The table is already there.
+1. Copy the publishable key (see **Supabase** above). The table is already there.
 2. In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to Git**, authorize
    GitHub if asked, and pick this repository.
 3. Build settings:
@@ -80,7 +80,7 @@ URL.
    - Build command: `npm run build`
    - Build output directory: `dist`
 4. Under **Environment variables (advanced)** add `VITE_SUPABASE_URL` and
-   `VITE_SUPABASE_ANON_KEY` with the values above. After the project exists, check
+   `VITE_SUPABASE_PUBLISHABLE_KEY` with the values above. After the project exists, check
    **Settings → Variables and Secrets** has both in **Production** and **Preview**, or preview
    builds will show the "can't reach its database" message.
 5. **Save and Deploy.** The site lands on `todo-cloudflare.pages.dev` (or a similar name if that
